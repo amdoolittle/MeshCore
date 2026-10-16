@@ -130,6 +130,14 @@ void halt() {
   char wifi_pwd[64] = WIFI_PWD;
   bool wifi_was_connected = false;
   bool wifi_enabled = false;   // set at boot from prefs; false also when the effective SSID is blank
+
+  #if defined(NTP_HOST) && defined(ESP32)
+  #include <esp_sntp.h>
+  #include "time.h"
+  void ntpSyncCallback(struct timeval *tv) {
+    WIFI_DEBUG_PRINTLN("NTP synchronized successfully!");
+  }
+  #endif
 #endif
 
 void setup() {
@@ -224,6 +232,10 @@ void setup() {
     board.setInhibitSleep(true);   // prevent sleep when WiFi is active
     WiFi.setAutoReconnect(true);
 
+    #ifdef NTP_HOST
+    sntp_set_time_sync_notification_cb(ntpSyncCallback);
+    #endif
+
     WiFi.onEvent([](WiFiEvent_t event, WiFiEventInfo_t info){
         if (event == ARDUINO_EVENT_WIFI_STA_DISCONNECTED) {
             WIFI_DEBUG_PRINTLN("WiFi disconnected (reason=%s). Flagging for reconnect...",
@@ -232,6 +244,12 @@ void setup() {
         } else if (event == ARDUINO_EVENT_WIFI_STA_GOT_IP) {
             WIFI_DEBUG_PRINTLN("WiFi connected successfully!");
             wifi_needs_reconnect = false;
+            #ifdef NTP_HOST
+            // Only configure NTP if GPS not enabled
+            if (the_mesh.getNodePrefs()->gps_enabled == 0) {}
+              configTime(the_mesh.getNodePrefs()->tz_offset * 60, 0, NTP_HOST);
+            }
+            #endif
         }
     });
 #endif
