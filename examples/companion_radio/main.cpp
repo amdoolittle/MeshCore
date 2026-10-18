@@ -241,7 +241,7 @@ void setup() {
     WiFi.setAutoReconnect(true);
 
     if (ntp_enabled && ntp_host[0]) {
-		sntp_set_time_sync_notification_cb(ntpSyncCallback);
+		  sntp_set_time_sync_notification_cb(ntpSyncCallback);
     }
 
     WiFi.onEvent([](WiFiEvent_t event, WiFiEventInfo_t info){
@@ -254,7 +254,7 @@ void setup() {
             wifi_needs_reconnect = false;
             // Only configure NTP if GPS not enabled
             if (ntp_enabled && ntp_host[0] && the_mesh.getNodePrefs()->gps_enabled == 0) {
-              configTime(the_mesh.getNodePrefs()->tz_offset * 60, 0, NTP_HOST);
+              configTime(the_mesh.getNodePrefs()->tz_offset * 60, 0, ntp_host);
             }
         }
     });
