@@ -194,6 +194,18 @@ private:
     WiFiPrefs(NodePrefs* parent) : _parent(parent) { }
   };
   WiFiPrefs wifi;
+
+  class NTPPrefs : public ConfigSerializer {
+    NodePrefs* _parent;
+  protected:
+    void structure() override {
+      def("host", _parent->ntp_host, sizeof(_parent->ntp_host));
+      def("enabled", _parent->ntp_enabled);
+    }
+  public:
+    NTPPrefs(NodePrefs* parent) : _parent(parent) { }
+  };
+  NTPPrefs ntp;
 #endif
 
 protected:

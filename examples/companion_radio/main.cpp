@@ -130,6 +130,7 @@ void halt() {
   char wifi_pwd[64] = WIFI_PWD;
   bool wifi_was_connected = false;
   bool wifi_enabled = false;   // set at boot from prefs; false also when the effective SSID is blank
+  char ntp_host[64] = NTP_HOST;    // set at boot from prefs; false also when the NTP host is blank
   bool ntp_enabled = false;    // set at boot from prefs; false also when the NTP host is blank
   
   #if defined(ESP32)
@@ -252,7 +253,7 @@ void setup() {
             WIFI_DEBUG_PRINTLN("WiFi connected successfully!");
             wifi_needs_reconnect = false;
             // Only configure NTP if GPS not enabled
-            if (ntp_enabled && ntp_host[0] && the_mesh.getNodePrefs()->gps_enabled == 0) {}
+            if (ntp_enabled && ntp_host[0] && the_mesh.getNodePrefs()->gps_enabled == 0) {
               configTime(the_mesh.getNodePrefs()->tz_offset * 60, 0, NTP_HOST);
             }
         }

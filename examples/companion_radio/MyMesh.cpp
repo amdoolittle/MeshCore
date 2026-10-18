@@ -2192,7 +2192,7 @@ bool MyMesh::handleCommand(const char* command, uint32_t sender_timestamp, char*
   }
   
   if (memcmp(command, "set ntp.host ", 13) == 0) {
-    StrHelper::strncpy(_prefs.ntp_host, &command[13], sizeof(_prefs.ntp_ssid));
+    StrHelper::strncpy(_prefs.ntp_host, &command[13], sizeof(_prefs.ntp_host));
     savePrefs();
     sprintf(reply, "> ntp.host is now %s", _prefs.ntp_host);
     return true;
