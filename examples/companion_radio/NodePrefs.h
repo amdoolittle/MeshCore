@@ -57,6 +57,13 @@ public:
   uint8_t wifi_enabled = 1; // enabled by default to allow wifi only builds to work. wifi won't be started if ssid is empty
   // use ssid from prefs, or fallback to ssid from build flags
   const char* getWifiSSID() const { return wifi_ssid[0] ? wifi_ssid : WIFI_SSID; }
+  
+  #ifndef NTP_HOST
+    #define NTP_HOST ""
+  #endif
+  char ntp_host[64] = {0};
+  uint8_t ntp_enabled = 0;
+  const char* getNtpHost() const { return ntp_host[0] ? ntp_host : NTP_HOST; }
 #endif
 
 private:

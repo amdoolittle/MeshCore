@@ -2179,6 +2179,29 @@ bool MyMesh::handleCommand(const char* command, uint32_t sender_timestamp, char*
     }
     return true;
   }
+  
+  if (memcmp(command, "set ntp.enabled ", 16) == 0) {
+    _prefs.ntp_enabled = atoi(&command[16]) ? 1 : 0;
+    savePrefs();
+    sprintf(reply, "> ntp.enabled is now %d (reboot to apply)", _prefs.ntp_enabled);
+    return true;
+  }
+  if (strcmp(command, "get ntp.enabled") == 0) {
+    sprintf(reply, "> %d", _prefs.ntp_enabled);
+    return true;
+  }
+  
+  if (memcmp(command, "set ntp.host ", 13) == 0) {
+    StrHelper::strncpy(_prefs.ntp_host, &command[13], sizeof(_prefs.ntp_ssid));
+    savePrefs();
+    sprintf(reply, "> ntp.host is now %s", _prefs.ntp_host);
+    return true;
+  }
+  
+  if (strcmp(command, "get ntp.host") == 0) {
+    sprintf(reply, "> %s", _prefs.getNtpHost()[0] ? _prefs.getNtpHost() : "(not set)");
+    return true;
+  }
 #endif
 
   if (strcmp(command, "board") == 0) {
