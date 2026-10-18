@@ -222,12 +222,13 @@ protected:
     def("custom", custom);
 #ifdef ENABLE_WIFI_INTERFACE
     def("wifi", wifi);
+    def("ntp", ntp);
 #endif
   }
 public:
   NodePrefs() : radio(this), gps(this), companion(this), custom(&radio)
 #ifdef ENABLE_WIFI_INTERFACE
-    , wifi(this)
+    , wifi(this), ntp(this)
 #endif
   {
     node_name[0] = 0;
